@@ -12,7 +12,16 @@ code {
     monospace;
 }
 
-html, body, #root
+html, body, #root, .app, .grouplist
 {
     height: 100%;
+}
+
+.group {
+  height: 80%;
+  padding-bottom: 10%;
+}
+
+.question-card {
+  padding: 5%;
 }
