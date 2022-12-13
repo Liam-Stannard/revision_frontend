@@ -28,6 +28,14 @@
   color: #61dafb;
 }
 
+.grouplist {
+  height: 100%;
+}
+
+.GroupsPage { 
+  padding: 5%;
+}
+
 
 @keyframes App-logo-spin {
   from {

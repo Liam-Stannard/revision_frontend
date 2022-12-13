@@ -1,53 +1,37 @@
-import React from 'react'
-import Axios from 'axios'
-import QuestionCard from './question_card'
-import { AppBar, Toolbar, Container, Offset, Typography } from "@mui/material";
+import React, {useState } from 'react'
+import QuestionCard from './questionCard'
+import { Box, Button } from "@mui/material";
 
-class Group extends React.Component {
-
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      title: props.title,
-      description: props.description,
-      cards: props.cards,
-      card: null,
-      card_idx: 0,
-    };
-  }
-
-  componentDidMount() {
-    if (this.state.card_idx < this.state.cards.length) {
-      this.setState({ card: this.state.cards[this.state.card_idx] });
-    }
-  }
+export default function Group(props) {
+  const [cardIdx, setCardIdx] = useState(0);
 
 
-  render() {
+  const nextCard = (() => {
+    setCardIdx(currentIdx => {
+      return currentIdx + 1
+    })
+  });
 
-    if (this.state.card == null) {
-      return null
-    }
+  return (
+    <Box className='group'>
+      <h2 className='group-title'>
+        {props.title}
+      </h2>
+      <p className='group-desc'>{props.description}</p>
+      {props.cards[cardIdx] && (
+        <Box>
+          <QuestionCard
+            card={props.cards[cardIdx]}
+          ></QuestionCard>
+          <Button onClick={nextCard}>Next</Button>
+          <Button>Previous</Button>
+        </Box>)}
 
-    return (
-      <Container className='group'>
-        <h2>
-          {this.state.title}
-        </h2>
-        <p>{this.state.description}</p>
-        <QuestionCard
-          question={this.state.card.question}
-          answer={this.state.card.answer}
-        ></QuestionCard>
-      </Container>
-    );
-  }
-
-
+    </Box>
+  );
 }
 
-export default Group;
+
 
 
 

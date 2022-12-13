@@ -1,50 +1,26 @@
-import GroupList from "./components/group_list";
-import React from 'react'
-import Axios from 'axios'
+import React, { useEffect, useState } from 'react'
 import './App.css';
-import { AppBar, Toolbar, Container, Offset, Typography} from "@mui/material";
+import HomePage from "./pages/HomePage";
+import LoginPage from "./pages/LoginPage";
+import {BrowserRouter as Router, Route, Routes} from "react-router-dom"
+import NavigationBar from "./components/NavigationBar";
+import PrivateRoutes from './util/PrivateRoutes'
+import { AuthProvider } from './auth/AuthProvider';
 
-class App extends React.Component {
+export default function App() {
+  return (
+    <React.Fragment>
+      <NavigationBar></NavigationBar>
+      <Routes>
+        <Route element={<PrivateRoutes />}>
+          <Route path="/"  element={<HomePage/>} exact />
+        </Route>
+        <Route path="/login" element={<LoginPage/>}/>
+      </Routes>
+    </React.Fragment>
+  );
 
-  state = {
-    groups: null
+    
   }
 
 
-  render() {
-
-    if (this.state.groups == null) {
-      console.log("groups is null");
-      return null;
-    }
-    console.log("groups is not null");
-    return (
-
-      <div>
-        <AppBar position="static">
-          <Toolbar variant="dense">          
-          </Toolbar>
-        </AppBar>
-          <GroupList groups={this.state.groups}></GroupList>
-      </div>
-
-    );
-  }
-
-  async getData() {
-    const res = await Axios.get(' http://localhost:8000/group/')
-    const { data } = await res;
-    console.log(data);
-    this.setState({ groups: data })
-  }
-
-  componentDidMount() {
-    console.log("MOUNTED")
-    this.getData()
-  }
-
-}
-
-
-
-export default App;
