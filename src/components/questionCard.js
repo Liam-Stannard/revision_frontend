@@ -33,11 +33,11 @@ export default function QuestionCard(props) {
       console.log("value: " + value);
       console.log("ca: " + props.card.correct_answer);
 
-      if (value === props.card.correct_answer) {
+      if (value == props.card.correct_answer) {
         console.log("correct")
         setHelperText('Correct');
         setError(false);
-      } else if (value !== props.card.correct_answer) {
+      } else if (value != props.card.correct_answer) {
         console.log("Incorrect")
         setHelperText('Incorrect');
         setError(true);
