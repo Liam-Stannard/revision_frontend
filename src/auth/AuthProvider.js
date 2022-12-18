@@ -11,6 +11,8 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(() => localStorage.getItem('authTokens') ? jwt_decode(localStorage.getItem('authTokens')) : null);
     const [loading, setLoading] = useState(true);
 
+    let baseTokenEndpoint = 'http://localhost:8000/auth/token/'
+
     useEffect(() => {
         let interval = setInterval(() => {
             if (authTokens) {
@@ -23,7 +25,7 @@ export const AuthProvider = ({ children }) => {
 
     let loginUser = async (e) => {
         e.preventDefault();
-        fetch('http://localhost:8000/auth/token/', {
+        fetch(baseTokenEndpoint, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -59,7 +61,7 @@ export const AuthProvider = ({ children }) => {
 
 
     let updateToken = async () => {
-        fetch('http://localhost:8000/auth/token/refresh/', {
+        fetch(baseTokenEndpoint + '/refresh/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

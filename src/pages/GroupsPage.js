@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import Group from '../components/group';
 import AuthContext from '../auth/AuthContext';
-import { Box } from '@mui/system';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -18,11 +17,6 @@ const HomePage = () => {
   useEffect(() => {
     getGroups();
   }, []);
-
- 
-
-
- 
 
   const handleSelectGroup = (event) => {
     console.log("onchange", event.target.value);

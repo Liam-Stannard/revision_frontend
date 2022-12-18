@@ -6,18 +6,43 @@ export const GroupProvider = ({ children }) => {
 
     const [groups, setGroups] = useState([]);
     let { authTokens } = useContext(AuthContext);
+    const groupsEndpoint = 'http://localhost:8000/api/groups/';
 
+    let getGroups = async () => {
+        const controller = new AbortController()
+        fetch(groupsEndpoint, {
+          signal: controller.signal,
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + String(authTokens.access)
+          },
+    
+        }).then(response => {
+            
+          if (!response.ok) {
+            throw new Error(response.status)
+          }
+          return response.json()
+          
+        }).then(json => {
+          setGroups(json);
+        })
+    
+        return () => {
+          controller.abort()
+        }
+      };
+    
 
     let deleteGroup = (id) => (event) => {
         console.log("deleting group with id ", id)
         var filtered = groups.filter(function (group, idx, arr) {
             return group.id != id;
         });
-        console.log("deleting group with id ", filtered)
-        
 
         const controller = new AbortController()
-        fetch('http://localhost:8000/api/groups/'+id, {
+        fetch(groupsEndpoint + id, {
             signal: controller.signal,
             method: 'DELETE',
             headers: {
@@ -26,31 +51,24 @@ export const GroupProvider = ({ children }) => {
             },
 
         }).then(response => {
-            console.log("response is ", response)
             if (!response.ok) {
                 throw new Error(response.status)
             }
-            else {
-                return response
-            }
-        }).then(reso => {
             setGroups(filtered);
-        })
+            return response
+        });
 
         return () => {
             controller.abort()
-        }
-
-
+        };
     }
 
     let contextData = {
         groups: groups,
+        getGroups: getGroups,
         setGroups: setGroups,
         deleteGroup: deleteGroup,
     }
-
-
 
     return (
         <DataContext.Provider value={contextData}>
