@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(() => localStorage.getItem('authTokens') ? jwt_decode(localStorage.getItem('authTokens')) : null);
     const [loading, setLoading] = useState(true);
 
-    let baseTokenEndpoint = 'http://localhost:8000/auth/token/'
+    const baseTokenEndpoint = 'http://localhost:8000/auth/token/';
 
     useEffect(() => {
         let interval = setInterval(() => {
@@ -21,6 +21,13 @@ export const AuthProvider = ({ children }) => {
         }, 1000 * 60 * 4);
         return () => clearInterval(interval);
     }, [loading, authTokens]);
+
+    // useEffect(() => {
+    //     if (authTokens) {
+    //         updateToken()
+    //     }
+
+    // }, [])
 
 
     let loginUser = async (e) => {
@@ -38,6 +45,7 @@ export const AuthProvider = ({ children }) => {
         }).then(response => {
                 if (!response.ok) {
                     throw new Error(response.status)
+                    logoutUser()
                 }
                 else {
                     return response.json()
@@ -46,9 +54,11 @@ export const AuthProvider = ({ children }) => {
                 setAuthTokens(json);
                 setUser(jwt_decode(json.access));
                 localStorage.setItem('authTokens', JSON.stringify(json));
-                  navigate('/')
+                navigate('/');
             });
     };
+
+    
 
 
     let logoutUser = () => {
@@ -61,7 +71,7 @@ export const AuthProvider = ({ children }) => {
 
 
     let updateToken = async () => {
-        fetch(baseTokenEndpoint + '/refresh/', {
+        fetch(baseTokenEndpoint + 'refresh/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

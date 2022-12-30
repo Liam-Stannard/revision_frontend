@@ -11,59 +11,94 @@ import GroupContext from '../data/groupContext';
 
 const HomePage = () => {
 
-  let { groups, setGroups, deleteGroup, getGroups } = useContext(GroupContext);
-  let { authTokens } = useContext(AuthContext);
-  let [groupIdx, setGroupIdx] = useState(0);
-  let [isReadOnlyGroup, setReadOnlyGroup] = useState(true);
-
+  const { groups, setGroups, deleteGroup, getGroups, updateGroup, isWorking} = useContext(GroupContext);
+  const { authTokens } = useContext(AuthContext);
+  const [groupIdx, setGroupIdx] = useState(0);
+  const [isReadOnlyGroup, setReadOnlyGroup] = useState(true);
+  const [inputFields, setInputFields] = useState({}); 
+ 
 
   useEffect(() => {
-    getGroups();
+    console.log("fetching groups");
+    getGroups();    
   }, []);
+
 
   useEffect(() => {
     setReadOnlyGroup(true);
+    if(groups.length > groupIdx){
+      setInputFields((previousState => ({...previousState, ["title"]: groups[groupIdx].title, ["description"]: groups[groupIdx].description})));
+    }
+    else {
+      setInputFields((previousState => ({...previousState, ["title"]: "", ["description"]: ""})));
+    }
+  }, [isWorking]);
+  
+ 
+
+  useEffect(() => {
+    setReadOnlyGroup(true);
+    if(groups.length > groupIdx){
+      setInputFields((previousState => ({...previousState, ["title"]: groups[groupIdx].title, ["description"]: groups[groupIdx].description})));
+    }
+    else {
+      setInputFields((previousState => ({...previousState, ["title"]: "", ["description"]: ""})));
+    }
   }, [groupIdx]);
 
 
   const handleGroupSelect = (event) => {
     console.log("onchange", event.target.value);
     setGroupIdx(event.target.value);
+
   };
 
   const toggleReadOnlyGroup = () => {
-    console.log("read only is set to", isReadOnlyGroup);
     setReadOnlyGroup(current => !current);
+  }
+ 
+   const handleInputFieldChange = (event) => {
+    setInputFields(previousState => ({ ...previousState, [event.target.name]: event.target.value }));
+  }
+
+  const onClickUpdateGroup = () => {
+    console.log("updating with", inputFields.title, inputFields.description, groups[groupIdx].id);
+    {};
+    toggleReadOnlyGroup();
+    console.log("updating group finished");
   }
 
   return (
     <Box component={'main'} className="home-container">
       <Container className='home-section-one' >
         <h2>Welcome to the Home Page!</h2>
-        <FormControl>
+        <FormControl fullWidth>
           <InputLabel id="group-select-label">Group</InputLabel>
           <Select
             className='group-simple-select'
             labelId="group-select-label"
             id="group-simple-select"
-            value={groupIdx}
+            value={isWorking ? ''  : groupIdx}
             label="Group"
             onChange={handleGroupSelect}
             disabled={!isReadOnlyGroup}>
               {groups.map((grp, index) => <MenuItem key={index} value={index}>{grp.title}</MenuItem>)}
+            
           </Select>
         </FormControl>
       </Container>
       {groups[groupIdx] && (
-        <Container component={'main'}>
-          <Card elevation={5} className='home-section-two'>
-            <Grid container spacing={4} direction='column'>
+        <Container   component={'main'}>
+          <Card  elevation={5} className='home-section-two'>
+            <Grid  container spacing={4} direction='column'>
               <Grid item >
                 <TextField
                   disabled={isReadOnlyGroup}
                   label='Title'
                   className='home-group-title'
-                  value={groups[groupIdx].title}
+                  value={inputFields.title}
+                  onChange={handleInputFieldChange}
+                  name='title'
                 />
               </Grid>
               <Grid item >
@@ -71,10 +106,12 @@ const HomePage = () => {
                   disabled={isReadOnlyGroup}
                   label='Description'
                   className='home-group-description'
-                  value={groups[groupIdx].description}
+                  value={inputFields.description}
                   multiline
                   maxRows={4}
                   minRows={4}
+                  onChange={handleInputFieldChange}
+                  name='description'
                 />
               </Grid>
             </Grid>
@@ -82,13 +119,15 @@ const HomePage = () => {
             <Grid container>
               <Button onClick={toggleReadOnlyGroup}>Edit Group</Button>
               <Button onClick={deleteGroup(groups[groupIdx].id)}>Delete Group</Button>
+              <Button onClick={updateGroup(inputFields.title, inputFields.description, groups[groupIdx].id)}>Save</Button>
+              <Button>Exit</Button>
             </Grid>
           </Card>
         </Container>
       )}
     </Box>
   );
-
 };
+
 export default HomePage;
 

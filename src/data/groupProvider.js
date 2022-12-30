@@ -4,75 +4,119 @@ import AuthContext from '../auth/AuthContext'
 
 export const GroupProvider = ({ children }) => {
 
-    const [groups, setGroups] = useState([]);
-    let { authTokens } = useContext(AuthContext);
-    const groupsEndpoint = 'http://localhost:8000/api/groups/';
+  const [groups, setGroups] = useState([]);
+  const [isWorking, setIsWorking] = useState(false);
 
-    let getGroups = async () => {
-        const controller = new AbortController()
-        fetch(groupsEndpoint, {
-          signal: controller.signal,
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + String(authTokens.access)
-          },
-    
-        }).then(response => {
-            
-          if (!response.ok) {
-            throw new Error(response.status)
-          }
-          return response.json()
-          
-        }).then(json => {
-          setGroups(json);
-        })
-    
-        return () => {
-          controller.abort()
-        }
-      };
-    
+  let { authTokens } = useContext(AuthContext);
+  const groupsEndpoint = 'http://localhost:8000/api/card-groups/';
 
-    let deleteGroup = (id) => (event) => {
-        console.log("deleting group with id ", id)
-        var filtered = groups.filter(function (group, idx, arr) {
-            return group.id != id;
-        });
+  const getGroups = async () => {
+    setIsWorking(true);
+    const controller = new AbortController()
+    fetch(groupsEndpoint, {
+      signal: controller.signal,
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + String(authTokens.access)
+      },
 
-        const controller = new AbortController()
-        fetch(groupsEndpoint + id, {
-            signal: controller.signal,
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + String(authTokens.access)
-            },
+    }).then(response => {
 
-        }).then(response => {
-            if (!response.ok) {
-                throw new Error(response.status)
-            }
-            setGroups(filtered);
-            return response
-        });
+      if (!response.ok) {
+        throw new Error(response.status)
+      }
+      return response.json()
 
-        return () => {
-            controller.abort()
-        };
+    }).then(json => {
+      setGroups(json);
+      setIsWorking(false);
+    })
+
+    return () => {
+      controller.abort()
     }
+  };
 
-    let contextData = {
-        groups: groups,
-        getGroups: getGroups,
-        setGroups: setGroups,
-        deleteGroup: deleteGroup,
-    }
 
-    return (
-        <DataContext.Provider value={contextData}>
-            {children}
-        </DataContext.Provider>
-    )
+  const deleteGroup = (id) => (event) => {
+    console.log("deleting group with id ", id)
+    setIsWorking(true);
+    const filtered = groups.filter(function (group, idx, arr) {
+      return group.id != id;
+    });
+
+    const controller = new AbortController()
+    fetch(groupsEndpoint + id + '/', {
+      signal: controller.signal,
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + String(authTokens.access)
+      },
+
+    }).then(response => {
+      if (!response.ok) {
+        throw new Error(response.status)
+      }
+      setGroups(filtered);
+      setIsWorking(false);
+    });
+
+    return () => {
+      controller.abort()
+    };
+  };
+
+  let updateGroup = (title, desc, id) => (event) => {
+    console.log("updating group with id ", id)
+    setIsWorking(true);
+    const newGroups = groups.map(group => {
+      if (group.id === id) {
+        return { ...group, title: title, description: desc }
+      }
+
+      return group;
+    })
+
+    const controller = new AbortController()
+    fetch(groupsEndpoint + id + '/', {
+      signal: controller.signal,
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + String(authTokens.access)
+      },
+      body: JSON.stringify({
+        "title": title,
+        "description": desc,
+      }),
+    }).then(response => {
+      if (!response.ok) {
+        throw new Error(response.status)
+      }
+      setGroups(newGroups);
+      setIsWorking(false);
+      return response
+    });
+
+    return () => {
+      controller.abort()
+    };
+  }
+
+  let contextData = {
+    groups: groups,
+    isWorking, isWorking,
+    getGroups: getGroups,
+    setGroups: setGroups,
+    deleteGroup: deleteGroup,
+    updateGroup: updateGroup,
+  }
+
+  return (
+    <DataContext.Provider value={contextData}>
+      {children}
+    </DataContext.Provider>
+  )
 }
