@@ -10,6 +10,37 @@ export const GroupProvider = ({ children }) => {
   let { authTokens } = useContext(AuthContext);
   const groupsEndpoint = 'http://localhost:8000/api/card-groups/';
 
+  let createGroup = (title, description, owner) => (event) => {
+    console.log("create group with title/desc ", title, description, owner)
+    setIsWorking(true);
+    const newGroups = { ...groups, title: title, description: description };
+    const controller = new AbortController()
+    fetch(groupsEndpoint, {
+      signal: controller.signal,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + String(authTokens.access)
+      },
+      body: JSON.stringify({
+        "title": title,
+        "description": description,
+        "owner": owner,
+      }),
+    }).then(response => {
+      if (!response.ok) {
+        throw new Error(response.status)
+      }
+      setGroups(newGroups);
+      setIsWorking(false);
+      return response
+    });
+
+    return () => {
+      controller.abort()
+    };
+  }
+
   const getGroups = async () => {
     setIsWorking(true);
     const controller = new AbortController()
@@ -68,12 +99,12 @@ export const GroupProvider = ({ children }) => {
     };
   };
 
-  let updateGroup = (title, desc, id) => (event) => {
+  const updateGroup = (title, description, id) => (event) => {
     console.log("updating group with id ", id)
     setIsWorking(true);
     const newGroups = groups.map(group => {
       if (group.id === id) {
-        return { ...group, title: title, description: desc }
+        return { ...group, title: title, description: description }
       }
 
       return group;
@@ -89,7 +120,7 @@ export const GroupProvider = ({ children }) => {
       },
       body: JSON.stringify({
         "title": title,
-        "description": desc,
+        "description": description,
       }),
     }).then(response => {
       if (!response.ok) {
@@ -112,6 +143,7 @@ export const GroupProvider = ({ children }) => {
     setGroups: setGroups,
     deleteGroup: deleteGroup,
     updateGroup: updateGroup,
+    createGroup: createGroup,
   }
 
   return (
