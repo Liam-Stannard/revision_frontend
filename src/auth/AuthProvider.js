@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import AuthContext from './AuthContext';
 import jwt_decode from 'jwt-decode'
-import { json, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 export const AuthProvider = ({ children }) => {
@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(() => localStorage.getItem('authTokens') ? jwt_decode(localStorage.getItem('authTokens')) : null);
     const [loading, setLoading] = useState(true);
 
-    const baseTokenEndpoint = 'http://localhost:8000/auth/token/';
+    const BASE_TOKEN_ENDPOINT = 'http://localhost:8000/auth/token/';
 
     useEffect(() => {
         let interval = setInterval(() => {
@@ -22,17 +22,9 @@ export const AuthProvider = ({ children }) => {
         return () => clearInterval(interval);
     }, [loading, authTokens]);
 
-    // useEffect(() => {
-    //     if (authTokens) {
-    //         updateToken()
-    //     }
-
-    // }, [])
-
-
     let loginUser = async (e) => {
         e.preventDefault();
-        fetch(baseTokenEndpoint, {
+        fetch(BASE_TOKEN_ENDPOINT, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -43,12 +35,12 @@ export const AuthProvider = ({ children }) => {
             })
 
         }).then(response => {
-                if (!response.ok) {
-                    throw new Error(response.status)
-                    logoutUser()
+                if (response.ok) {
+                    return response.json()
+                    
                 }
                 else {
-                    return response.json()
+                    throw new Error(response.status)   
                 }
             }).then(json => {
                 setAuthTokens(json);
@@ -58,9 +50,6 @@ export const AuthProvider = ({ children }) => {
             });
     };
 
-    
-
-
     let logoutUser = () => {
         console.log("logging out")
         setAuthTokens(null);
@@ -69,9 +58,8 @@ export const AuthProvider = ({ children }) => {
         navigate('/login')
     }
 
-
     let updateToken = async () => {
-        fetch(baseTokenEndpoint + 'refresh/', {
+        fetch(BASE_TOKEN_ENDPOINT + 'refresh/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -97,12 +85,10 @@ export const AuthProvider = ({ children }) => {
 
     let contextData = {
         user: user,
-        authTokens, authTokens,
+        authTokens: authTokens,
         loginUser: loginUser,
-        logoutUser: logoutUser,
-        
+        logoutUser: logoutUser, 
     }
-
 
     return (
         <AuthContext.Provider value={contextData}>

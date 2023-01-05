@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from 'react'
+import { useContext, useState } from 'react'
 import DataContext from './collectionContext'
 import AuthContext from '../auth/AuthContext'
 
@@ -137,7 +137,7 @@ export const CollectionProvider = ({ children }) => {
 
   let contextData = {
     collections: collections,
-    isWorking, isWorking,
+    isWorking: isWorking,
     getCollections: getCollections,
     setCollections: setCollections,
     deleteCollection: deleteCollection,

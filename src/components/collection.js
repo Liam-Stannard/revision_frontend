@@ -1,19 +1,13 @@
-import React, { useContext, useEffect, useState } from 'react'
-import AuthContext from '../auth/AuthContext';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import React, { useContext, useState } from 'react'
 import { Button, Card, Container, Divider, Grid, Paper, TextField, Typography } from '@mui/material';
-import { Box } from '@mui/system';
-import GroupContext from '../data/groupContext';
+import CollectionContext from '../data/collectionContext';
 
-export default function Group(props) {
+export default function Collection(props) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [id, setId] = useState(0);
-  const [isReadOnlyGroup, setIsReadOnlyGroup] = useState(true);
-  const { groups, setGroups, deleteGroup, getGroups, updateGroup, isWorking} = useContext(GroupContext);
+  const [isReadOnlyCollection, setIsReadOnlyCollection] = useState(true);
+  const { collections, setCollections, deleteCollection, getCollections, updateCollection, isWorking} = useContext(CollectionContext);
 
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
@@ -23,8 +17,8 @@ export default function Group(props) {
     setDescription(event.target.value);
   }
 
-  const toggleReadOnlyGroup = () => {
-    setIsReadOnlyGroup(current => !current);
+  const toggleReadOnlyCollection = () => {
+    setIsReadOnlyCollection(current => !current);
   }
  
 
@@ -34,9 +28,9 @@ export default function Group(props) {
             <Grid  container spacing={4} direction='column'>
               <Grid item >
                 <TextField
-                  disabled={isReadOnlyGroup}
+                  disabled={isReadOnlyCollection}
                   label='Title'
-                  className='home-group-title'
+                  className='home-collection-title'
                   value={title}
                   onChange={handleTitleChange}
                   name='title'
@@ -44,9 +38,9 @@ export default function Group(props) {
               </Grid>
               <Grid item >
                 <TextField
-                  disabled={isReadOnlyGroup}
+                  disabled={isReadOnlyCollection}
                   label='Description'
-                  className='home-group-description'
+                  className='home-collection-description'
                   value={description}
                   multiline
                   maxRows={4}
@@ -58,9 +52,9 @@ export default function Group(props) {
             </Grid>
             <Divider variant="middle" />
             <Grid container>
-              <Button onClick={toggleReadOnlyGroup}>Edit Group</Button>
-              <Button onClick={deleteGroup(id)}>Delete Group</Button>
-              <Button onClick={updateGroup(title, description, id)}>Save</Button>
+              <Button onClick={toggleReadOnlyCollection}>Edit Collection</Button>
+              <Button onClick={deleteCollection(id)}>Delete Collection</Button>
+              <Button onClick={updateCollection(title, description, id)}>Save</Button>
               <Button>Cancel</Button>
             </Grid>
           </Card>

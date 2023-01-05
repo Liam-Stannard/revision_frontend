@@ -5,16 +5,16 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AuthProvider } from './auth/AuthProvider';
 import { BrowserRouter } from "react-router-dom"
-import { GroupProvider } from './data/groupProvider';
+import { CollectionProvider } from './data/collectionProvider';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
-        <GroupProvider>
+        <CollectionProvider>
           <App />
-        </GroupProvider>
+        </CollectionProvider>
       </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>

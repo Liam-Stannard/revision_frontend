@@ -2,9 +2,13 @@ import React from 'react'
 import './css/App.css';
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
+import CollectionsPage from './pages/CollectionPage';
 import { Route, Routes } from "react-router-dom"
 import NavigationBar from "./components/NavigationBar";
 import PrivateRoutes from './util/PrivateRoutes'
+
+
+
 
 export default function App() {
   return (
@@ -13,6 +17,7 @@ export default function App() {
       <Routes>
         <Route element={<PrivateRoutes />}>
           <Route path="/" element={<HomePage />} exact />
+          <Route path="/collection" element={<CollectionsPage />} exact />
         </Route>
         <Route path="/login" element={<LoginPage />} />
       </Routes>

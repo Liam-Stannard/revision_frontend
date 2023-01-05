@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import AuthContext from '../auth/AuthContext'
 import { Button, FormControl, Grid, Paper, TextField, Typography } from '@mui/material';
-import '../css/login.css';
+import '../css/loginPage.css';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';

@@ -1,0 +1,9 @@
+.textField {
+    text-transform: capitalize;
+    width: 100%;
+    margin: auto;
+}
+
+.sectionTwo {
+    padding: 5%;
+}

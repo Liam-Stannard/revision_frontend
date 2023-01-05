@@ -1,20 +1,24 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext } from 'react'
 import AuthContext from '../auth/AuthContext';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import { Button, Card, Container, Divider, Grid, Paper, TextField, Typography } from '@mui/material';
-import '../css/home.css'
+import { Container, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import GroupContext from '../data/groupContext';
-import GroupForm from '../components/groupForm';
+import '../css/homePage.css'
+
+
 
 const HomePage = () => {
-  const { authTokens } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
+  
   return (
-    <GroupForm></GroupForm>
+    <Box className='root'>
+      <Container component={'main'} className='content'>
+            <Typography className='title' variant='h2'>Welcome to revis.io {user.username}</Typography>
+            <Container className='text'>View, edit and create your collections from the collections page above, it's time to revise away!</Container>
+      </Container>
+    </Box>
+    
+    
   );
 };
 
