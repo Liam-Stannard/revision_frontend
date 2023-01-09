@@ -1,15 +1,19 @@
 import React from 'react'
-import {Typography } from '@mui/material';
+
 import CollectionForm from '../components/collectionForm';
+import CollectionList from '../components/collectionList';
+import BasePage from './basePage';
+
+import { Typography } from '@mui/material';
+
+import '../css/collectionPage.css'
 
 const CollectionPage = () => {
 
   return (
-    <> 
-      <Typography variant='h2'>Collections</Typography>
-      <CollectionForm></CollectionForm>
-    </>
-    
+    <BasePage title="Collections" content={
+      <CollectionList></CollectionList>
+    } />
   );
 };
 export default CollectionPage;
