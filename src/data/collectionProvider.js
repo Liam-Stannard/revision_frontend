@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react'
+
 import DataContext from './collectionContext'
-import AuthContext from '../auth/AuthContext'
+import AuthContext from '../auth/authContext'
 
 export const CollectionProvider = ({ children }) => {
 

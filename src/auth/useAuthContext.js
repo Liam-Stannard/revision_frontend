@@ -1,4 +1,4 @@
-import AuthContext from "./AuthContext";
+import AuthContext from "./authContext";
 
 const useAuthContext = () => {
 const user = useContext(AuthContext);

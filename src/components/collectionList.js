@@ -1,16 +1,17 @@
-/** @jsxImportSource @emotion/react */
+ /** @jsxImportSource @emotion/react */
 import React, { useContext, useEffect, useState } from 'react'
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { Button, Card, Container, Divider, FormLabel, Grid, TextField } from '@mui/material';
+import { Button, Card, Container, Divider, FormLabel, Grid, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import CollectionContext from '../data/collectionContext';
-import '../css/collectionForm.css';
+import '../css/collectionList.css';
+import CollectionCard from './collectionCard';
 
 
-export default function CollectionForm(props) {
+export default function CollectionList(props) {
 
   const { collections, deleteCollection, getCollections, updateCollection, isWorking, createCollection } = useContext(CollectionContext);
   const [collectionIdx, setCollectionIdx] = useState(0);
@@ -99,62 +100,30 @@ export default function CollectionForm(props) {
     setIsEditingCollection(false);
   }
 
+  let collectionList = []
+
+
+  if (collections && collections.length > 0) {
+    collectionList = collections.map((collection, index) => 
+    <Grid item xs={4} sm={8} md={12} key={index} sx={{margin: "auto"}}>
+    <CollectionCard
+        title={collection.title}
+        description={collection.description}>
+    </CollectionCard>
+    </Grid>
+    );
+ 
+  }
+
   return (
-    <Container className="collection-form-container">
-      <Grid container spacing={4} direction='column'>
-            <FormLabel className='title'>Collections</FormLabel>
-            <Grid item >
-              <TextField
-                disabled={isReadOnlyCollection}
-                label='Title'
-                className='textField'
-                value={title}
-                onChange={handleTitleChange}
-                name='title'
-                fullWidth
-              />
-            </Grid>
-            <Grid item >
-              <TextField
-                disabled={isReadOnlyCollection}
-                label='Description'
-                className='textField'
-                value={description}
-                multiline
-                maxRows={4}
-                minRows={4}
-                onChange={handleDescriptionChange}
-                name='description'
-                fullWidth
-              />
-            </Grid>
-          </Grid>
-          <Divider variant="middle" />
-          <Grid container className='buttonGrid'>
-
-            {!isCreatingCollection && !isEditingCollection && (
-              <>
-              <Button onClick={toggleIsCreatingCollection}>New Collection</Button>
-              {isCollectionToEdit && (<>
-                <Button onClick={toggleIsEditingCollection}>Edit Collection</Button>
-                <Button onClick={deleteCollection(id)}>Delete Collection</Button>
-                </>)}
-              </>
-            )}
-            {isEditingCollection && (
-              <>
-                <Button onClick={updateCollection(title, description, id)}>Save</Button>
-                <Button onClick={cancelCollectionEditing}>Cancel</Button>
-              </>
-            )}
-            {isCreatingCollection && (
-              <>
-                <Button onClick={createCollection(title, description)}>Create Collection</Button>
-                <Button onClick={cancelCollectionEditing}>Cancel</Button>
-              </>
-            )}
-
-            {/*  */}
-      </Grid>
+    <Container className="collection-list-container">
+        <Grid   container
+                columnGap={3} 
+                className="collection-list-grid" 
+                spacing={{ xs: 2, md: 2 }} 
+                columns={{ xs: 4, sm: 8, md: 12 }
+                }>
+            {collections && collections.length > 0 && (collectionList)}
+        </Grid>
     </Container>);
 }

@@ -2,12 +2,6 @@
     display: flex;
 }
 
-.title {
-    flex-grow: 1;
-    padding: 5%;
-    text-align: center;
-}
-
 content {
     flex-grow: 1;
     padding-top: "10%";

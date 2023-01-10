@@ -1,26 +1,15 @@
 import React from 'react'
+
+import ResponsiveDrawer from './components/drawer';
+
 import './css/App.css';
-import HomePage from "./pages/HomePage";
-import LoginPage from "./pages/LoginPage";
-import CollectionsPage from './pages/CollectionPage';
-import { Route, Routes } from "react-router-dom"
-import NavigationBar from "./components/NavigationBar";
-import PrivateRoutes from './util/PrivateRoutes'
 
-
-
+const drawerWidth = 240;
 
 export default function App() {
   return (
     <React.Fragment>
-      <NavigationBar></NavigationBar>
-      <Routes>
-        <Route element={<PrivateRoutes />}>
-          <Route path="/" element={<HomePage />} exact />
-          <Route path="/collection" element={<CollectionsPage />} exact />
-        </Route>
-        <Route path="/login" element={<LoginPage />} />
-      </Routes>
+      <ResponsiveDrawer/>
     </React.Fragment>
   );
 

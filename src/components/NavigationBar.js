@@ -1,7 +1,10 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
+
+import AuthContext from '../auth/authContext';
+
 import { AppBar, Button, Toolbar, Box } from "@mui/material";
-import AuthContext from '../auth/AuthContext';
+
 import '../css/navigationBar.css'
 
 const NavigationBar = () => {
